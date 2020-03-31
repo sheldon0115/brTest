@@ -1,0 +1,93 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-03-31 16:04:42
+ * @LastEditTime: 2020-03-31 17:03:36
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \QR_BR\QRandBR-code\br-success-2.html
+ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="QR Code scanner">
+    <meta name="keywords" content="qrcode,qr code,scanner,barcode,javascript">
+    <meta name="language" content="English">
+    <meta name="copyright" content="Lazar Laszlo (c) 2011">
+    <meta name="Revisit-After" content="1 Days">
+    <meta name="robots" content="index, follow">
+    
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport" />
+    <title>识别条形码</title>
+</head>
+<body>
+<section id="container" class="container">
+ <div class="controls">
+   <fieldset class="input-group" style="width: 200px;height:100px;">
+     <input type="file" accept="image/*;capture=camera" >
+     <button id="btnIdents" style="margin-top:20px;">识别</button>
+     <div id="showR">
+     </div>
+   </fieldset>
+ </div>
+ <div id="interactive" class="viewport"><br clear="all"></div>
+</section>
+<script src="https://cdn.bootcss.com/jquery/2.0.3/jquery.js" type="text/javascript"></script>
+<script src="js/quagga.min.js" type="text/javascript"></script>
+<!--<link rel="stylesheet" type="text/css" href="./css/fileinput.css">-->
+<!--<script src="./js/file_input.js" type="text/javascript"></script>-->
+<script type="text/javascript">
+$(function() {var App = {
+        init: function() {
+            App.attachListeners();
+        },
+        attachListeners: function() {
+            var self = this;
+            $("#btnIdents").on("click", function(e) {
+                var input = document.querySelector(".controls input[type=file]");
+                if (input.files && input.files.length) {
+                    App.decode(URL.createObjectURL(input.files[0]));
+                }
+            });
+        },
+        decode: function(src) {
+            var self = this,
+                config = $.extend({}, self.state, {src: src});
+            Quagga.decodeSingle(config, function(result) {
+                //识别结果
+                if(result.codeResult){
+                    console.log(result.codeResult.code);
+                    // $("#showR").text("图片中的条形码为：" + result.codeResult.code);
+                    alert("图片中的条形码为：" + result.codeResult.code);
+                }else{
+                    // $("#showR").text("未识别到图片中的条形码！");
+                    alert("未识别到图片中的条形码！");
+                }
+            });
+        },
+        state: {
+            inputStream: {
+                size: 800,
+                singleChannel: false
+            },
+            locator: {
+                patchSize: "medium",
+                halfSample: true
+            },
+            // 'ean_reader','code_39_reader','code_128_reader'
+            decoder: {
+                readers: [{
+                    format: ['ean_reader'],
+                    config: {}
+                }]
+            },
+            locate: true,
+            src: null
+        }
+    };
+
+    App.init();
+});
+</script>
+</body>
+</html>
